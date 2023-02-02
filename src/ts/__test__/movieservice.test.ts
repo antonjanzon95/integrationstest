@@ -3,29 +3,42 @@
  */
 
 import { getData } from "../services/movieservice";
-import { IMovie } from "./../models/Movie";
 
 beforeEach(() => {
   document.body.innerHTML = "";
   jest.clearAllMocks();
 });
 
-jest.mock("../movieservice.ts");
+jest.mock("../services/movieservice.ts");
 
 describe("tests for data fetch", () => {
-  test("should fetch mock data", async () => {
+  test("should fetch all 3 movies in mock array", async () => {
     // arrange
-    document.body.innerHTML = `
-      <form id="searchForm">
-        <input type="text" id="searchText" placeholder="Skriv titel här" />
-        <button type="submit" id="search">Sök</button>
-      </form>
-      <div id="movie-container"></div>`;
 
     // act
-    let result = await getData();
+    let result = await getData("Lord");
 
     // assert
     expect(result.length).toBe(3);
+  });
+
+  test("should only fetch first movie in mock array", async () => {
+    // arrange
+
+    // act
+    let result = await getData("Fellowship");
+
+    // assert
+    expect(result.length).toBe(1);
+  });
+
+  test("should not fetch any of the movies in the mock array", async () => {
+    // arrange
+
+    // act
+    let result = await getData("Bamse");
+
+    // assert
+    expect(result.length).toBe(0);
   });
 });
