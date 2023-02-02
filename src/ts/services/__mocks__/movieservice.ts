@@ -1,6 +1,6 @@
 import { IMovie } from "../../models/Movie";
 
-let movies: IMovie[] = [
+export let movies: IMovie[] = [
   {
     Title: "The Lord of the Rings: The Fellowship of the Ring",
     imdbID: "0120737",

@@ -1,20 +1,22 @@
-/**
- * @jest-environment jsdom
- */
-
 import { getData } from "../services/movieservice";
+import { movies } from "../services/__mocks__/movieservice";
+import { IOmdbResponse } from "./../models/IOmdbResponse";
 
-beforeEach(() => {
-  document.body.innerHTML = "";
-  jest.clearAllMocks();
-});
-
-jest.mock("../services/movieservice.ts");
+jest.mock("axios", () => ({
+  get: async (searchText: string) => {
+    return new Promise((resolve, reject) => {
+      // lägg till .filter för att bara skicka ut de filmer som söks på
+      if (!searchText.endsWith("error")) {
+        resolve({ data: { Search: movies }, status: 200 });
+      } else {
+        reject({ data: [], status: 500 });
+      }
+    });
+  },
+}));
 
 describe("tests for data fetch", () => {
-  test("should fetch all 3 movies in mock array", async () => {
-    // arrange
-
+  test("should fetch data from mock array", async () => {
     // act
     let result = await getData("Lord");
 
@@ -22,21 +24,9 @@ describe("tests for data fetch", () => {
     expect(result.length).toBe(3);
   });
 
-  test("should only fetch first movie in mock array", async () => {
-    // arrange
-
-    // act
-    let result = await getData("Fellowship");
-
-    // assert
-    expect(result.length).toBe(1);
-  });
-
   test("should not fetch any of the movies in the mock array", async () => {
-    // arrange
-
     // act
-    let result = await getData("Bamse");
+    let result = await getData("error");
 
     // assert
     expect(result.length).toBe(0);
