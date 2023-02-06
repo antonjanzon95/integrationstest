@@ -24,8 +24,12 @@ export let movies: IMovie[] = [
   },
 ];
 
-export async function getData(SearchText: string): Promise<IMovie[]> {
-  return new Promise((resolve) => {
-    resolve(movies.filter((movie) => movie.Title.includes(SearchText)));
+export async function getData(searchText: string): Promise<IMovie[]> {
+  return new Promise((resolve, reject) => {
+    if (searchText !== "error") {
+      resolve(movies.filter((movie) => movie.Title.includes(searchText)));
+    } else {
+      reject("error");
+    }
   });
 }

@@ -4,7 +4,6 @@
 
 import { IMovie } from "../models/Movie";
 import * as movieApp from "../movieApp";
-import { getData } from "../services/movieservice";
 
 beforeEach(() => {
   document.body.innerHTML = "";
@@ -113,12 +112,26 @@ describe("tests for handleSubmit function", () => {
     expect(spyOnDisplayNoResult).toBeCalledTimes(1);
   });
 
-  // test("should call the displayNoResult function inside catch-block", async () => {
-  //   // arrange
-  //   // act
-  //   await movieApp.handleSubmit();
-  //   // assert
-  // });
+  test("should call the displayNoResult function inside catch-block", async () => {
+    // arrange
+    document.body.innerHTML =
+      `<input type="text" id="searchText" placeholder="Skriv titel här" />` +
+      `<div id="movie-container"></div>`;
+
+    (document.querySelector("#searchText") as HTMLInputElement).value = "error";
+
+    let spyOnCreateHtml = jest.spyOn(movieApp, "createHtml").mockReturnValue();
+    let spyOnDisplayNoResult = jest
+      .spyOn(movieApp, "displayNoResult")
+      .mockReturnValue();
+
+    // act
+    await movieApp.handleSubmit();
+
+    // assert
+    expect(spyOnCreateHtml).toBeCalledTimes(0);
+    expect(spyOnDisplayNoResult).toBeCalledTimes(1);
+  });
 });
 
 describe("tests for init-function", () => {

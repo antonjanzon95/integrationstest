@@ -1,15 +1,13 @@
 import { getData } from "../services/movieservice";
 import { movies } from "../services/__mocks__/movieservice";
-import { IOmdbResponse } from "./../models/IOmdbResponse";
 
 jest.mock("axios", () => ({
-  get: async (searchText: string) => {
+  get: async (url: string) => {
     return new Promise((resolve, reject) => {
-      // lägg till .filter för att bara skicka ut de filmer som söks på
-      if (!searchText.endsWith("error")) {
-        resolve({ data: { Search: movies }, status: 200 });
+      if (!url.endsWith("error")) {
+        resolve({ data: { Search: movies } });
       } else {
-        reject({ data: [], status: 500 });
+        reject({ data: [] });
       }
     });
   },
